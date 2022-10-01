@@ -8,24 +8,25 @@ import 'package:flutter_tello/api/imu_attitude.dart';
 import 'package:flutter_tello/api/imu_velocity.dart';
 import 'package:flutter_tello/api/tello_command.dart';
 import 'package:flutter_tello/api/tello_state.dart';
+import 'package:flutter_tello/command_history.dart';
 import 'package:flutter_tello/commands/write/startup_command.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:udp/udp.dart';
 
+export 'commands/control/curve_to_position_command.dart';
+export 'commands/control/emergency_command.dart';
+export 'commands/control/flip_command.dart';
+export 'commands/control/fly_command.dart';
+export 'commands/control/fly_to_position_command.dart';
+export 'commands/control/land_command.dart';
+export 'commands/control/rotate_command.dart';
+export 'commands/control/take_off_command.dart';
+export 'commands/control/video_stream_command.dart';
 export 'commands/read/get_speed_command.dart';
 export 'commands/write/change_wifi_command.dart';
-export 'commands/write/curve_to_position_command.dart';
-export 'commands/write/emergency_command.dart';
-export 'commands/write/flip_command.dart';
-export 'commands/write/fly_command.dart';
-export 'commands/write/fly_to_position_command.dart';
-export 'commands/write/land_command.dart';
 export 'commands/write/remote_control_command.dart';
-export 'commands/write/rotate_command.dart';
 export 'commands/write/set_speed_command.dart';
 export 'commands/write/startup_command.dart';
-export 'commands/write/take_off_command.dart';
-export 'commands/write/video_stream_command.dart';
 
 class TelloConfiguration {
   int receivePort;
@@ -47,6 +48,7 @@ class Tello {
   Endpoint? _receiveEndpoint;
   TelloConfiguration configuration;
   int timeoutInSeconds;
+  CommandHistory _commandHistory = CommandHistory();
 
   // Listening
   PublishSubject<String> commandsQueue = PublishSubject<String>();
@@ -54,9 +56,11 @@ class Tello {
   Tello({required this.configuration, this.timeoutInSeconds = 20});
 
   get rawDataStream => _receiveSocket?.asStream(timeout: Duration(seconds: timeoutInSeconds)).map((datagram) => processDatagram(datagram));
+  get history => _commandHistory.commandHistoryList;
 
   Stream<TelloState> get state =>
       rawDataStream?.map<TelloState>((String currentState) {
+        // Thanks to ryze_tello
         RegExp telloStateRegex = RegExp(r"((pitch:)(.+)(;roll:)(.+)(;yaw:)(.+)(;vgx:)(.+)(;vgy:)(.+)(;vgz:)(.+)(;templ:)(.+)(;temph:)(.+)(;tof:)(.+)(;h:)(.+)(;bat:)(.+)(;baro:)(.+)(;time:)(.+)(;agx:)(.+)(;agy:)(.+)(;agz:)(.+)(;))");
 
         RegExpMatch matches = telloStateRegex.firstMatch(currentState)!;
@@ -76,6 +80,8 @@ class Tello {
       Stream.empty();
 
   Future<int> sendCommand(TelloCommand command) async {
+    _commandHistory.add(command);
+
     final data = command.execute();
     if (data.isEmpty || _sendEndpoint == null) return 0;
 

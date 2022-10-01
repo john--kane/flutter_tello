@@ -9,7 +9,7 @@ class CurveToPositionCommand implements TelloCommand {
   late int z2;
   late int speed;
 
-  CurveToPositionCommand({x1 = 0, y1 = 0, z1 = 0, x2 = 0, y2 = 0, z2 = 0, speed = 20});
+  CurveToPositionCommand({this.x1 = 0, this.y1 = 0, this.z1 = 0, this.x2 = 0, this.y2 = 0, this.z2 = 0, this.speed = 20});
 
   @override
   String execute() {
@@ -19,6 +19,6 @@ class CurveToPositionCommand implements TelloCommand {
 
   @override
   String getTitle() {
-    return 'Fly to Position';
+    return 'Curve to Position';
   }
 }

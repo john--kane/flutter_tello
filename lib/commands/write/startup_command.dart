@@ -8,6 +8,6 @@ class StartupCommand implements TelloCommand {
 
   @override
   String getTitle() {
-    return 'Set Speed';
+    return 'Send the startup command';
   }
 }

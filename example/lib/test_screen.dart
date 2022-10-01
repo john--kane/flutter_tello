@@ -11,7 +11,7 @@ class TestScreen extends StatefulWidget {
 }
 
 class _TestScreenState extends State<TestScreen> {
-  late Tello drone = Tello(configuration: TelloConfiguration());
+  Tello drone = Tello(configuration: TelloConfiguration());
 
   @override
   Widget build(BuildContext context) {
@@ -28,20 +28,6 @@ class _TestScreenState extends State<TestScreen> {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return Center(child: CircularProgressIndicator());
               }
-
-              // return Center(
-              //   child: StreamBuilder(
-              //       stream: drone.rawDataStream,
-              //       builder: (BuildContext context, AsyncSnapshot snapshot) {
-              //         if (snapshot.hasData) {
-              //           return Text("TEST");
-              //         } else if (snapshot.hasError) {
-              //           return Icon(Icons.error_outline);
-              //         } else {
-              //           return CircularProgressIndicator();
-              //         }
-              //       }),
-              // );
               return ListView(
                 children: [
                   StreamBuilder<TelloState>(

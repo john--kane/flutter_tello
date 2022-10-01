@@ -22,6 +22,6 @@ class RotateCommand implements TelloCommand {
 
   @override
   String getTitle() {
-    return 'Land';
+    return 'Rotate';
   }
 }

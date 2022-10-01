@@ -1,39 +1,37 @@
-<!--
-This README describes the package. If you publish this package to pub.dev,
-this README's contents appear on the landing page for your package.
+#flutter_tello
 
-For information about how to write a good package README, see the guide for
-[writing package pages](https://dart.dev/guides/libraries/writing-package-pages).
+flutter_tello is a package for those wanting to control their Tello. The example folder has some basic example.
 
-For general information about developing packages, see the Dart guide for
-[creating packages](https://dart.dev/guides/libraries/create-library-packages)
-and the Flutter guide for
-[developing packages and plugins](https://flutter.dev/developing-packages).
--->
-
-TODO: Put a short description of the package here that helps potential users
-know whether this package might be useful for them.
+It is written in dart and depends on the rxdart and udp packages for simple binding and event publishing.
 
 ## Features
 
-TODO: List what your package can do. Maybe include images, gifs, or videos.
+Send basic commands to your Tello.
+
+Based of version 2.0 of the Tello SDK, found here: [https://dl-cdn.ryzerobotics.com/downloads/Tello/Tello%20SDK%202.0%20User%20Guide.pdf]
 
 ## Getting started
 
-TODO: List prerequisites and provide or point to information on how to
-start using the package.
+Create an instance of Tello
+
+Tello drone = Tello(configuration: TelloConfiguration());
+
+The default configuration will set the ports and default destination ip’s of the Tello. e.g. IP: “192.168.10.1", Receive Port = 8890, Send Port = 8889,
+
+%% N.B. Video streaming coming soon
+
+Call the setup method to create a UDP socket and start listening on the TelloConfigration() ports.
 
 ## Usage
 
-TODO: Include short and useful examples for package users. Add longer examples
-to `/example` folder.
+Since the setup() is asynchronous, you should wrap it in a FutureBuilder or add it to an main() async function. The setup method will also send the ‘command’ command, so you don’t need to.
 
-```dart
-const like = 'sample';
-```
+Once it is setup, you can then send commands to your Tello. This package follows the command pattern so every command you can send is wrapped in a command class.
+
+e.g.
+drone.sendCommand(TakeOffCommand())
 
 ## Additional information
 
-TODO: Tell users more about the package: where to find more information, how to
-contribute to the package, how to file issues, what response they can expect
-from the package authors, and more.
+Documentation on the different commands etc, coming soon.
+
