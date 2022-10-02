@@ -1,6 +1,6 @@
 name: flutter_tello
 description: A package to send commands to your DJI Tello. Based on v2.0 of the Tello SDK.
-version: 0.0.1
+version: 0.0.2
 homepage: https://github.com/john--kane/flutter_tello/wiki
 repository: https://github.com/john--kane/flutter_tello
 
